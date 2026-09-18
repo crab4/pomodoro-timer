@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 
-const config = { work: 25, short: 5, long: 15, cycles: 4 };
+const config = { work: 25, short: 5, long: 15, cycles: 4, volume: 70 };
 
 
 const state = {
@@ -13,7 +13,7 @@ const state = {
   timerId: null,
 };
 
-const RING_CIRCUMFERENCE = 2 * Math.PI * 100; 
+const RING_CIRCUMFERENCE = 2 * Math.PI * 100;
 const phaseNames = {
   work: 'Работа',
   short: 'Короткий отдых',
@@ -24,7 +24,7 @@ function loadConfig() {
   try {
     const saved = JSON.parse(localStorage.getItem('pomodoro-config') || 'null');
     if (saved && typeof saved === 'object') Object.assign(config, saved);
-  } catch (_) {}
+  } catch (_) { }
 }
 
 function saveConfig() {
@@ -32,10 +32,12 @@ function saveConfig() {
 }
 
 function applyConfigToInputs() {
-  $('workTime').value  = config.work;
+  $('workTime').value = config.work;
   $('shortBreak').value = config.short;
-  $('longBreak').value  = config.long;
-  $('cycles').value    = config.cycles;
+  $('longBreak').value = config.long;
+  $('cycles').value = config.cycles;
+  $('volume').value = config.volume;
+  $('volumeValue').textContent = config.volume + '%';
 }
 
 
@@ -45,10 +47,12 @@ function readConfigFromInputs() {
     if (isNaN(v)) v = def;
     return Math.max(min, Math.min(max, v));
   };
-  config.work   = clamp($('workTime').value,   1, 180, 25);
-  config.short  = clamp($('shortBreak').value, 1, 60,   5);
-  config.long   = clamp($('longBreak').value,  1, 120, 15);
-  config.cycles = clamp($('cycles').value,     1, 12,   4);
+  config.work = clamp($('workTime').value, 1, 180, 25);
+  config.short = clamp($('shortBreak').value, 1, 60, 5);
+  config.long = clamp($('longBreak').value, 1, 120, 15);
+  config.cycles = clamp($('cycles').value, 1, 12, 4); 
+  config.volume = clamp($('volume').value, 0, 100, 70);
+  $('volumeValue').textContent = config.volume + '%';
   saveConfig();
 
   if (!state.running && state.remaining === state.total) {
@@ -61,9 +65,9 @@ function readConfigFromInputs() {
 
 function phaseDuration(phase) {
   switch (phase) {
-    case 'work':  return config.work * 60;
+    case 'work': return config.work * 60;
     case 'short': return config.short * 60;
-    case 'long':  return config.long * 60;
+    case 'long': return config.long * 60;
   }
   return config.work * 60;
 }
@@ -146,12 +150,12 @@ function setInputsDisabled(disabled) {
 // ---------- Sound ----------
 function playSound(phase) {
   let src;
-  if (phase === 'work')       src = '/sounds/work_end.wav';
+  if (phase === 'work') src = '/sounds/work_end.wav';
   else if (phase === 'short') src = '/sounds/break_end.wav';
-  else                        src = '/sounds/long_break_end.wav';
+  else src = '/sounds/long_break_end.wav';
 
   const audio = new Audio(src);
-  audio.volume = 0.7;
+  audio.volume = config.volume / 100;   
   audio.play().catch(err => console.warn('Не удалось воспроизвести звук:', err));
 }
 
@@ -183,9 +187,9 @@ function render() {
   } else if (state.remaining === state.total) {
     // Фаза ещё не начиналась — показываем явное действие
     $('startBtn').textContent =
-      state.phase === 'work'  ? 'Начать работу' :
-      state.phase === 'short' ? 'Начать отдых'  :
-                                'Начать длинный отдых';
+      state.phase === 'work' ? 'Начать работу' :
+        state.phase === 'short' ? 'Начать отдых' :
+          'Начать длинный отдых';
   } else {
     $('startBtn').textContent = 'Продолжить';
   }
@@ -219,6 +223,20 @@ function init() {
       state.running ? pause() : start();
     }
   });
+
+  // Живое обновление процентов и сохранение громкости
+$('volume').addEventListener('input', () => {
+  $('volumeValue').textContent = $('volume').value + '%';
+});
+$('volume').addEventListener('change', readConfigFromInputs);
+
+// Кнопка "Проверить звук"
+$('testSoundBtn').addEventListener('click', () => {
+  // Перед воспроизведением подтянем актуальное значение из слайдера
+  config.volume = parseInt($('volume').value, 10) || 0;
+  $('volumeValue').textContent = config.volume + '%';
+  playSound('work');
+});
 
   setPhase('work');
   setInputsDisabled(false);

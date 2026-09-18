@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pomodoro</title>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body data-phase="idle">
   <div class="app">
     <h1>Pomodoro</h1>
@@ -25,13 +27,21 @@
         <label>Циклов до длинного отдыха
           <input type="number" id="cycles" min="1" max="12" value="4">
         </label>
+
+        <label class="volume-label">Громкость
+          <span class="volume-row">
+            <input type="range" id="volume" min="0" max="100" step="1" value="70">
+            <span class="volume-value" id="volumeValue">70%</span>
+          </span>
+        </label>
       </div>
+      <button type="button" id="testSoundBtn" class="test-sound">🔊 Проверить звук</button>
     </details>
 
     <div class="timer">
       <svg viewBox="0 0 220 220" class="ring">
-        <circle cx="110" cy="110" r="100" class="ring-bg"/>
-        <circle cx="110" cy="110" r="100" class="ring-fg"/>
+        <circle cx="110" cy="110" r="100" class="ring-bg" />
+        <circle cx="110" cy="110" r="100" class="ring-fg" />
       </svg>
       <div class="timer-text">
         <div class="phase" id="phase">Готов</div>
@@ -49,4 +59,5 @@
 
   <script src="/script.js"></script>
 </body>
+
 </html>

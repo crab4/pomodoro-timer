@@ -195,3 +195,96 @@ button:disabled {
   opacity: .4;
   cursor: not-allowed;
 }
+
+
+/* ---------- Volume ---------- */
+.volume-label {
+  grid-column: 1 / -1;   /* на всю ширину */
+}
+
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volume-row input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #0f172a;
+  border: 1px solid var(--panel-2);
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.volume-row input[type="range"]:hover {
+  border-color: var(--accent);
+}
+
+/* Ползунок — Chromium */
+.volume-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #0f172a;
+  cursor: pointer;
+  transition: transform .1s, background .3s;
+}
+
+.volume-row input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Ползунок — Firefox */
+.volume-row input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #0f172a;
+  cursor: pointer;
+  transition: transform .1s, background .3s;
+}
+
+.volume-row input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+
+.volume-value {
+  min-width: 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.volume-row input[type="range"]:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ---------- Test sound button ---------- */
+.test-sound {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: transparent;
+  border: 1px dashed var(--panel-2);
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.test-sound:hover:not(:disabled) {
+  background: var(--panel-2);
+  color: var(--text);
+}
