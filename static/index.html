@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pomodoro</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body data-phase="idle">
+  <div class="app">
+    <h1>Pomodoro</h1>
+
+    <details class="settings" open>
+      <summary>Настройки</summary>
+      <div class="settings-grid">
+        <label>Рабочий цикл (мин)
+          <input type="number" id="workTime" min="1" max="180" value="25">
+        </label>
+        <label>Короткий отдых (мин)
+          <input type="number" id="shortBreak" min="1" max="60" value="5">
+        </label>
+        <label>Длинный отдых (мин)
+          <input type="number" id="longBreak" min="1" max="120" value="15">
+        </label>
+        <label>Циклов до длинного отдыха
+          <input type="number" id="cycles" min="1" max="12" value="4">
+        </label>
+      </div>
+    </details>
+
+    <div class="timer">
+      <svg viewBox="0 0 220 220" class="ring">
+        <circle cx="110" cy="110" r="100" class="ring-bg"/>
+        <circle cx="110" cy="110" r="100" class="ring-fg"/>
+      </svg>
+      <div class="timer-text">
+        <div class="phase" id="phase">Готов</div>
+        <div class="time" id="time">25:00</div>
+        <div class="cycles" id="cycleInfo">Цикл 0 / 4</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn" class="primary">Старт</button>
+      <button id="pauseBtn" disabled>Пауза</button>
+      <button id="resetBtn">Сброс</button>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
